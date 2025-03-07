@@ -31,13 +31,13 @@ export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Get()
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.USER)
   findAll() {
     return this.categoriesService.findAll();
   }
 
   @Get(':id')
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.USER)
   async findOne(@Param('id', ParseIntPipe) id: number) {
     console.log('Controller findOne - ID recibido:', id);
     const result = await this.categoriesService.findOne(id);
@@ -84,10 +84,7 @@ export class CategoriesController {
 
   @Delete(':id')
   @Roles(Role.ADMIN)
-  async remove(
-    @Param('id', ParseIntPipe) id: number,
-    @Request() req: any,
-  ) {
+  async remove(@Param('id', ParseIntPipe) id: number, @Request() req: any) {
     return this.categoriesService.remove(id, req.user.email);
   }
 }

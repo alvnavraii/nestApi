@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
-import { formatInTimeZone } from 'date-fns-tz';
 
 @Injectable()
 export class UserService {
@@ -13,8 +12,7 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {
-    // Establecer la zona horaria al iniciar el servicio
-    this.setTimeZone();
+    void this.setTimeZone();
   }
 
   private async setTimeZone() {

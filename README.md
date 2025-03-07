@@ -1,99 +1,185 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🛍️ E-commerce API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Modern RESTful API for e-commerce management, built with NestJS and Oracle Database.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🌟 Features
 
-## Description
+- 🔐 JWT Authentication
+- 👥 User and role management
+- 📁 Hierarchical category management
+- 🌐 Multi-language support
+- 📝 Complete audit trail
+- 🔍 Optimized queries
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🚀 Endpoints
 
-## Project setup
+### Authentication
 
-```bash
-$ yarn install
-```
+POST /auth/login
+Content-Type: application/json
 
-## Compile and run the project
+{
+  "email": "user@example.com",
+  "password": "password"
+}
 
-```bash
-# development
-$ yarn run start
+Response:
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIs..."
+}
 
-# watch mode
-$ yarn run start:dev
+### Categories
 
-# production mode
-$ yarn run start:prod
-```
+GET /categories
+GET /categories/:id
+POST /categories
+PATCH /categories/:id
+DELETE /categories/:id
 
-## Run tests
+Example of category creation:
+{
+  "name": "Electronics",
+  "description": "Electronic products",
+  "isActive": true,
+  "parent_id": null
+}
 
-```bash
-# unit tests
-$ yarn run test
+### Languages
 
-# e2e tests
-$ yarn run test:e2e
+GET /language
+GET /language/:id
 
-# test coverage
-$ yarn run test:cov
-```
+## 🔒 Security
 
-## Deployment
+The API uses several security levels:
+- JWT Authentication
+- User roles (ADMIN, USER)
+- Custom guards
+- Transform interceptors
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## 📝 Response Structure
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+All responses include audit information:
 
-```bash
-$ yarn install -g mau
-$ mau deploy
-```
+{
+  "id": 1,
+  "name": "Example",
+  "audit": {
+    "createdAt": "1/3/2024, 10:30:00",
+    "updatedAt": "2/3/2024, 15:45:00",
+    "createdBy": {
+      "id": 1,
+      "firstName": "Admin",
+      "lastName": "User"
+    },
+    "updatedBy": null
+  }
+}
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## 🛠️ Technologies
 
-## Resources
+- NestJS
+- TypeORM
+- Oracle Database
+- JWT
+- TypeScript
+- Class Validator
+- Class Transformer
 
-Check out a few resources that may come in handy when working with NestJS:
+## 📦 Installation
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+1. Clone repository
+git clone [repository-url]
 
-## Support
+2. Install dependencies
+npm install
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+3. Configure environment variables
+cp .env.example .env
 
-## Stay in touch
+4. Start application
+npm run start:dev
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## 🔧 Configuration
 
-## License
+Create a `.env` file with the following variables:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+BD_HOST=localhost
+BD_PORT=1521
+BD_SERVICE_NAME=xe
+BD_USER=user
+BD_PASSWORD=password
+JWT_SECRET=your-jwt-secret
+JWT_EXPIRATION_TIME=24h
+
+## 📄 License
+
+[MIT](LICENSE)
+
+## 👥 Contributing
+
+Contributions are welcome. Please open an issue or pull request for suggestions.
+
+## 📚 Additional Documentation
+
+### Database Structure
+
+Main tables include:
+- USERS: User management
+- CATEGORIES: Hierarchical categories
+- LANGUAGES: Multi-language support
+
+### Usage Examples
+
+#### Authentication
+
+// Login
+const response = await fetch('/auth/login', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    email: 'user@example.com',
+    password: 'password'
+  })
+});
+
+const { access_token } = await response.json();
+
+#### Get Categories
+
+// Get all categories
+const response = await fetch('/categories', {
+  headers: {
+    'Authorization': `Bearer ${access_token}`
+  }
+});
+
+const categories = await response.json();
+
+### Error Handling
+
+The API uses standard HTTP status codes:
+- 200: Success
+- 201: Created
+- 400: Bad Request
+- 401: Unauthorized
+- 403: Forbidden
+- 404: Not Found
+- 500: Server Error
+
+### Pagination
+
+For endpoints that return lists, pagination can be used:
+GET /categories?page=1&limit=10
+
+### Filters
+
+Some endpoints support filters:
+GET /categories?isActive=true
+GET /categories?parent_id=1
+
+## 🤝 Support
+
+For support, please contact [email@example.com](mailto:email@example.com)

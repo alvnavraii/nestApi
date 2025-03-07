@@ -10,6 +10,7 @@ import { AuditSubscriber } from './common/subscribers/audit.subscriber';
 import { APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
 import { UserContextInterceptor } from './common/interceptors/user-context.interceptor';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { LanguageModule } from './language/language.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
         mount: true,
       },
     }),
+    LanguageModule,
   ],
   controllers: [AppController],
   providers: [

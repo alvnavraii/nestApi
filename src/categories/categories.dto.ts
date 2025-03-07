@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class CreateCategoryDto {
@@ -16,7 +16,7 @@ export class CreateCategoryDto {
   @IsOptional()
   isActive?: boolean;
 
-  @Transform(({ value }) => value ? Number(value) : null)
+  @Transform(({ value }) => (value ? Number(value) : null))
   @IsOptional()
   parent_id?: number;
 }
