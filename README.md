@@ -62,8 +62,9 @@ Example of language creation:
   "isDefault": true,
   "isActive": true
 }
-
+```
 Response:
+
 ```json
 {
   "id": 1,
@@ -82,6 +83,7 @@ Response:
     "updatedBy": null
   }
 }
+```
 
 ## 🔒 Security
 
