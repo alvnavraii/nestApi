@@ -46,8 +46,39 @@ Example of category creation:
 
 ### Languages
 
-GET /language
+GET /language/active
 GET /language/:id
+GET /language
+POST /language
+PATCH /language/:id
+DELETE /language/:id
+
+Ejemplo de creación de idioma:
+{
+  "code": "ES",
+  "name": "Español",
+  "isDefault": true,
+  "isActive": true
+}
+
+Respuesta:
+{
+  "id": 1,
+  "code": "ES",
+  "name": "Español",
+  "isDefault": true,
+  "isActive": true,
+  "audit": {
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-01T00:00:00Z",
+    "createdBy": {
+      "id": 1,
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "updatedBy": null
+  }
+}
 
 ## 🔒 Security
 

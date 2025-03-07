@@ -1,15 +1,20 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
+
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Language } from './language.entity.ts';
+import { Language } from './language.entity';
 import { UserService } from '../user/user.service';
-import { InjectEntityManager } from '@nestjs/typeorm';
-import { EntityManager } from 'typeorm';
+import { CreateLanguageDto } from './language.dto';
+import { UpdateLanguageDto } from './language.dto';
 
 @Injectable()
 export class LanguageService {
@@ -37,23 +42,157 @@ export class LanguageService {
 
   constructor(
     @InjectRepository(Language)
-    private languageRepository: Repository<Language>,
-    private userService: UserService,
-    @InjectEntityManager()
-    private entityManager: EntityManager,
+    private readonly languageRepository: Repository<Language>,
+    private readonly userService: UserService,
   ) {}
 
-  async findAll() {
-    const languages = await this.entityManager.query(this.BASE_QUERY);
-    return this.transformLanguages(languages);
+  async create(
+    createLanguageDto: CreateLanguageDto,
+    userEmail: string,
+  ): Promise<any> {
+    if (!createLanguageDto) {
+      throw new BadRequestException(
+        'No se han proporcionado datos para crear el idioma',
+      );
+    }
+
+    const user = await this.userService.findByEmail(userEmail);
+    if (!user) {
+      throw new UnauthorizedException('Usuario no encontrado');
+    }
+
+    await this.languageRepository.query(
+      `BEGIN DBMS_SESSION.SET_IDENTIFIER(:1); END;`,
+      [user.id.toString()],
+    );
+
+    try {
+      const language = new Language();
+      language.code = createLanguageDto.code;
+      language.name = createLanguageDto.name;
+      language.isDefault = !!createLanguageDto.isDefault;
+      language.isActive = createLanguageDto.isActive !== false;
+
+      const savedLanguage = await this.languageRepository.save(language);
+
+      await this.languageRepository.query(
+        `BEGIN DBMS_SESSION.CLEAR_IDENTIFIER; END;`,
+      );
+
+      const result = await this.findOne(savedLanguage.id);
+      console.log('Idioma creado:', result);
+
+      return result;
+    } catch (error) {
+      console.error('Error al crear idioma:', error);
+      await this.languageRepository.query(
+        `BEGIN DBMS_SESSION.CLEAR_IDENTIFIER; END;`,
+      );
+      throw error;
+    }
+  }
+
+  async update(
+    id: number,
+    updateLanguageDto: UpdateLanguageDto,
+    userEmail: string,
+  ): Promise<any> {
+    const language = await this.languageRepository.findOne({
+      where: { id: id },
+    });
+
+    if (!language) {
+      throw new NotFoundException(`Idioma con ID ${id} no encontrado`);
+    }
+
+    if (!userEmail) {
+      throw new UnauthorizedException('Email de usuario no proporcionado');
+    }
+
+    const user = await this.userService.findByEmail(userEmail);
+    if (!user) {
+      throw new UnauthorizedException('Usuario no encontrado');
+    }
+
+    await this.languageRepository.query(
+      `BEGIN DBMS_SESSION.SET_IDENTIFIER(:1); END;`,
+      [user.id.toString()],
+    );
+
+    try {
+      if (updateLanguageDto.code) language.code = updateLanguageDto.code;
+      if (updateLanguageDto.name) language.name = updateLanguageDto.name;
+      if (updateLanguageDto.isDefault !== undefined)
+        language.isDefault = updateLanguageDto.isDefault;
+      if (updateLanguageDto.isActive !== undefined)
+        language.isActive = updateLanguageDto.isActive;
+
+      await this.languageRepository.save(language);
+
+      await this.languageRepository.query(
+        `BEGIN DBMS_SESSION.CLEAR_IDENTIFIER; END;`,
+      );
+
+      const result = await this.findOne(id);
+      return result;
+    } catch (error) {
+      await this.languageRepository.query(
+        `BEGIN DBMS_SESSION.CLEAR_IDENTIFIER; END;`,
+      );
+      throw error;
+    }
+  }
+
+  async remove(id: number, userEmail: string): Promise<any> {
+    const language = await this.languageRepository.findOne({
+      where: { id: id },
+    });
+
+    if (!language) {
+      throw new NotFoundException(`Idioma con ID ${id} no encontrado`);
+    }
+    const user = await this.userService.findByEmail(userEmail);
+    if (!user) {
+      throw new UnauthorizedException('Usuario no encontrado');
+    }
+
+    await this.languageRepository.query(
+      `BEGIN DBMS_SESSION.SET_IDENTIFIER(:1); END;`,
+      [user.id.toString()],
+    );
+    try {
+      await this.languageRepository.update(id, { isActive: false });
+      await this.languageRepository.query(
+        `BEGIN DBMS_SESSION.CLEAR_IDENTIFIER; END;`,
+      );
+    } catch (error) {
+      await this.languageRepository.query(
+        `BEGIN DBMS_SESSION.CLEAR_IDENTIFIER; END;`,
+      );
+      throw error;
+    }
+    const updatedLanguage = await this.findOne(id);
+    return updatedLanguage;
   }
 
   async findOne(id: number) {
-    const [language] = await this.entityManager.query(
+    const [language] = await this.languageRepository.query(
       `${this.BASE_QUERY} WHERE l.ID = :1`,
       [id],
     );
     return language ? this.transformLanguage(language) : null;
+  }
+
+  async findAll() {
+    const languages = await this.languageRepository.query(this.BASE_QUERY);
+    return languages.map((language) => this.transformLanguage(language));
+  }
+
+  async findAllActive() {
+    const languages = await this.languageRepository.query(
+      `${this.BASE_QUERY} WHERE l.IS_ACTIVE = 1`,
+    );
+    return languages.map((language) => this.transformLanguage(language));
   }
 
   private transformLanguage(language: any) {
@@ -66,21 +205,21 @@ export class LanguageService {
       audit: {
         createdAt: language.CREATED_AT,
         updatedAt: language.UPDATED_AT,
-        createdBy: language.CREATED_BY_ID ? {
-          id: language.CREATED_BY_ID,
-          firstName: language.CREATED_BY_FIRST_NAME,
-          lastName: language.CREATED_BY_LAST_NAME
-        } : null,
-        updatedBy: language.UPDATED_BY_ID ? {
-          id: language.UPDATED_BY_ID,
-          firstName: language.UPDATED_BY_FIRST_NAME,
-          lastName: language.UPDATED_BY_LAST_NAME
-        } : null
-      }
+        createdBy: language.CREATED_BY_ID
+          ? {
+              id: language.CREATED_BY_ID,
+              firstName: language.CREATED_BY_FIRST_NAME,
+              lastName: language.CREATED_BY_LAST_NAME,
+            }
+          : null,
+        updatedBy: language.UPDATED_BY_ID
+          ? {
+              id: language.UPDATED_BY_ID,
+              firstName: language.UPDATED_BY_FIRST_NAME,
+              lastName: language.UPDATED_BY_LAST_NAME,
+            }
+          : null,
+      },
     };
-  }
-
-  private transformLanguages(languages: any[]) {
-    return languages.map(language => this.transformLanguage(language));
   }
 }
