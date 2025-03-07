@@ -18,15 +18,19 @@ Modern RESTful API for e-commerce management, built with NestJS and Oracle Datab
 POST /auth/login
 Content-Type: application/json
 
+```json
 {
   "email": "user@example.com",
   "password": "password"
 }
+```
 
 Response:
+```json
 {
   "access_token": "eyJhbGciOiJIUzI1NiIs..."
 }
+```
 
 ### Categories
 
@@ -37,14 +41,16 @@ PATCH /categories/:id
 DELETE /categories/:id
 
 Example of category creation:
+```json
 {
   "name": "Electronics",
   "description": "Electronic products",
   "isActive": true,
   "parent_id": null
 }
+```
 
-### Languages
+### 🌐 Languages
 
 GET /language/active
 GET /language/:id
