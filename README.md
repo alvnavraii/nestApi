@@ -34,11 +34,11 @@ Response:
 
 ### 📁 Categories
 
-GET /categories
-GET /categories/:id
-POST /categories
-PATCH /categories/:id
-DELETE /categories/:id
+GET /categories  
+GET /categories/:id  
+POST /categories  
+PATCH /categories/:id  
+DELETE /categories/:id  
 
 Example of category creation:
 ```json
@@ -52,11 +52,11 @@ Example of category creation:
 
 ### 🌐 Languages
 
-GET /language/active
-GET /language/:id
-GET /language
-POST /language
-PATCH /language/:id
+GET /language/active  
+GET /language/:id  
+GET /language  
+POST /language  
+PATCH /language/:id  
 DELETE /language/:id
 
 Example of language creation:
