@@ -53,19 +53,19 @@ POST /language
 PATCH /language/:id
 DELETE /language/:id
 
-Ejemplo de creación de idioma:
+Example of language creation:
 {
-  "code": "ES",
-  "name": "Español",
+  "code": "EN",
+  "name": "English",
   "isDefault": true,
   "isActive": true
 }
 
-Respuesta:
+Response:
 {
   "id": 1,
-  "code": "ES",
-  "name": "Español",
+  "code": "EN",
+  "name": "English",
   "isDefault": true,
   "isActive": true,
   "audit": {
