@@ -89,7 +89,7 @@ All responses include audit information:
 ## 📦 Installation
 
 1. Clone repository
-git clone [repository-url]
+git clone https://github.com/alvnavraii/nestApi
 
 2. Install dependencies
 npm install
@@ -182,4 +182,4 @@ GET /categories?parent_id=1
 
 ## 🤝 Support
 
-For support, please contact [email@example.com](mailto:email@example.com)
+For support, please contact [alvnavra@gmail.com](mailto:alvnavra@gmail.com)
