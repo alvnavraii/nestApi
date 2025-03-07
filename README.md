@@ -32,7 +32,7 @@ Response:
 }
 ```
 
-### Categories
+### 📁 Categories
 
 GET /categories
 GET /categories/:id
