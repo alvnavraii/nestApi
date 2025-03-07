@@ -54,6 +54,7 @@ PATCH /language/:id
 DELETE /language/:id
 
 Example of language creation:
+json
 {
   "code": "EN",
   "name": "English",
@@ -62,6 +63,7 @@ Example of language creation:
 }
 
 Response:
+json
 {
   "id": 1,
   "code": "EN",
