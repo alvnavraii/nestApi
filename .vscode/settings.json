@@ -1,0 +1,11 @@
+{
+    "problems.decorations.enabled": false,
+    "problems.autoReveal": false,
+    "files.associations": {
+        "*.sql": "plaintext"
+    },
+    "[sql]": {
+        "editor.formatOnSave": false
+    },
+    "liveServer.settings.port": 5501
+}
