@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="../styles/website.css">
-<script src="../scripts/theme.js"></script>
 
 # Quick Start Guide
 

@@ -1,0 +1,7 @@
+{% extends template.self %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ "styles/website.css"|resolveAsset }}">
+    <script src="{{ "scripts/theme.js"|resolveAsset }}"></script>
+    {{ super() }}
+{% endblock %} 
