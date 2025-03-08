@@ -21,7 +21,10 @@
     "typeorm": "typeorm-ts-node-commonjs",
     "typeorm:generate-migration": "npm run typeorm -- migration:generate -d src/ormconfig.ts src/migrations/display_order",
     "typeorm:run-migrations": "npm run typeorm -- migration:run -d src/ormconfig.ts",
-    "typeorm:revert-migration": "npm run typeorm -- migration:revert -d src/ormconfig.ts"
+    "typeorm:revert-migration": "npm run typeorm -- migration:revert -d src/ormconfig.ts",
+    "docs:serve": "honkit serve docs",
+    "docs:build": "honkit build docs",
+    "docs:pdf": "honkit pdf docs"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -71,7 +74,8 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.20.0"
+    "typescript-eslint": "^8.20.0",
+    "honkit": "^4.0.0"
   },
   "jest": {
     "moduleFileExtensions": [

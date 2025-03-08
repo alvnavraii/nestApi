@@ -1,0 +1,257 @@
+/* Variables para tema claro */
+:root[data-theme="light"] {
+    --color-primary: #2E86C1;
+    --color-bg: #f8f9fa;
+    --color-text: #333;
+    --color-code-bg: #f7f9fb;
+    --color-sidebar-bg: #fff;
+    --color-border: #e3e3e3;
+    --color-link: #2E86C1;
+    --color-code-text: #333;
+    --color-blockquote: #858585;
+}
+
+/* Variables para tema oscuro */
+:root[data-theme="dark"] {
+    --color-primary: #58a6ff;
+    --color-bg: #0d1117;
+    --color-text: #c9d1d9;
+    --color-code-bg: #161b22;
+    --color-sidebar-bg: #161b22;
+    --color-border: #30363d;
+    --color-link: #58a6ff;
+    --color-code-text: #c9d1d9;
+    --color-blockquote: #8b949e;
+}
+
+/* Estilos generales */
+body {
+    background-color: var(--color-bg) !important;
+    color: var(--color-text) !important;
+    transition: all 0.3s ease;
+}
+
+/* Contenido principal */
+.markdown-section {
+    color: var(--color-text) !important;
+    background-color: var(--color-bg) !important;
+}
+
+.markdown-section h1,
+.markdown-section h2,
+.markdown-section h3,
+.markdown-section h4,
+.markdown-section h5,
+.markdown-section h6 {
+    color: var(--color-primary) !important;
+}
+
+.markdown-section p,
+.markdown-section ul,
+.markdown-section ol {
+    color: var(--color-text) !important;
+}
+
+/* Enlaces */
+.markdown-section a {
+    color: var(--color-link) !important;
+}
+
+/* Bloques de código */
+.markdown-section pre,
+.markdown-section code {
+    background-color: var(--color-code-bg) !important;
+    color: var(--color-code-text) !important;
+}
+
+.markdown-section pre > code {
+    color: var(--color-code-text) !important;
+}
+
+/* Citas */
+.markdown-section blockquote {
+    border-left-color: var(--color-border) !important;
+    color: var(--color-blockquote) !important;
+}
+
+/* Tablas */
+.markdown-section table {
+    border-color: var(--color-border) !important;
+}
+
+.markdown-section table th,
+.markdown-section table td {
+    border-color: var(--color-border) !important;
+    background-color: var(--color-bg) !important;
+    color: var(--color-text) !important;
+}
+
+/* Barra lateral */
+.book-summary {
+    background-color: var(--color-sidebar-bg) !important;
+    border-right: 1px solid var(--color-border) !important;
+}
+
+.book-summary ul.summary li a {
+    color: var(--color-text) !important;
+}
+
+.book-summary ul.summary li.active > a {
+    color: var(--color-primary) !important;
+}
+
+/* Toggle de tema (mantenemos los estilos anteriores) */
+.theme-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.theme-toggle:hover {
+    background-color: rgba(128, 128, 128, 0.2);
+}
+
+.theme-toggle .sun,
+.theme-toggle .moon {
+    width: 24px;
+    height: 24px;
+    fill: var(--color-text);
+}
+
+[data-theme="dark"] .sun,
+[data-theme="light"] .moon {
+    display: none;
+}
+
+/* Navegación superior */
+.book-header {
+    background-color: var(--color-bg) !important;
+    border-bottom: 1px solid var(--color-border) !important;
+}
+
+.book-header .btn {
+    color: var(--color-text) !important;
+}
+
+.book-header h1 {
+    color: var(--color-primary) !important;
+}
+
+/* Barra de búsqueda */
+#book-search-input {
+    background: var(--color-bg) !important;
+    border-bottom: 1px solid var(--color-border) !important;
+}
+
+#book-search-input input {
+    background: var(--color-bg) !important;
+    color: var(--color-text) !important;
+}
+
+/* Resultados de búsqueda */
+.search-results {
+    background: var(--color-bg) !important;
+}
+
+.search-results .search-results-title {
+    color: var(--color-text) !important;
+}
+
+.search-results .search-results-list li {
+    color: var(--color-text) !important;
+    border-bottom: 1px solid var(--color-border) !important;
+}
+
+/* Paginación */
+.navigation {
+    background: var(--color-bg) !important;
+    border-top: 1px solid var(--color-border) !important;
+}
+
+.navigation-prev, .navigation-next {
+    color: var(--color-text) !important;
+}
+
+.navigation-prev:hover, .navigation-next:hover {
+    color: var(--color-primary) !important;
+}
+
+/* Barra lateral expandida/colapsada */
+.book.with-summary .book-summary {
+    background: var(--color-sidebar-bg) !important;
+}
+
+.book-summary ul.summary li.divider {
+    background: var(--color-border) !important;
+}
+
+.book-summary ul.summary li i.fa {
+    color: var(--color-text) !important;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
+}
+
+/* Botones y controles */
+.btn {
+    background: var(--color-bg) !important;
+    color: var(--color-text) !important;
+    border: 1px solid var(--color-border) !important;
+}
+
+.btn:hover {
+    background: var(--color-code-bg) !important;
+}
+
+/* Tooltips */
+.tooltip {
+    background: var(--color-code-bg) !important;
+    color: var(--color-text) !important;
+    border: 1px solid var(--color-border) !important;
+}
+
+/* Menú de lenguajes (si está habilitado) */
+.lang-switcher {
+    background: var(--color-bg) !important;
+    color: var(--color-text) !important;
+    border: 1px solid var(--color-border) !important;
+}
+
+/* Notificaciones y alertas */
+.alert {
+    background: var(--color-code-bg) !important;
+    color: var(--color-text) !important;
+    border: 1px solid var(--color-border) !important;
+}
+
+/* Fondos de página */
+.page-wrapper {
+    background: var(--color-bg) !important;
+}
+
+.page-inner {
+    background: var(--color-bg) !important;
+} 
