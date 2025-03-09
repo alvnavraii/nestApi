@@ -24,3 +24,12 @@
 * [License](LICENSE.md)
 * [Support](support.md)
 
+## Documentation
+
+For the best documentation experience with full features (including theme switching):
+
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Run documentation server: `npm run docs:serve`
+4. Open http://localhost:4000
+
