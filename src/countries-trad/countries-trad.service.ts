@@ -50,8 +50,7 @@ export class CountriesTradService {
       `)) as OracleQueryResult<CountryTradRaw>;
 
       return result.rows.map(transformCountryTrad);
-    } catch (error) {
-      console.error('Error en findAll:', error);
+    } catch (_) {
       throw new InternalServerErrorException(
         'Error al obtener las traducciones de países',
       );
@@ -112,8 +111,8 @@ export class CountriesTradService {
       `)) as OracleQueryResult<CountryTradRaw>;
 
       return result.rows.map(transformCountryTrad);
-    } catch (error) {
-      console.error('Error en findAllInactive:', error);
+    } catch (_) {
+      console.error('Error en findAllInactive:', _);
       throw new InternalServerErrorException(
         'Error al obtener las traducciones inactivas',
       );
@@ -321,11 +320,11 @@ export class CountriesTradService {
          WHERE ID = :1`,
         [id],
       );
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
+    } catch (_) {
+      if (_ instanceof NotFoundException) {
+        throw _;
       }
-      console.error('Error en remove:', error);
+      console.error('Error en remove:', _);
       throw new InternalServerErrorException(
         'Error al eliminar la traducción del país',
       );
