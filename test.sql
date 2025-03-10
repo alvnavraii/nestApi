@@ -56,3 +56,5 @@ select table_name from user_tables where table_name like '%TRAN%';
 desc country_translations;
 
 desc countries;
+
+desc categories;

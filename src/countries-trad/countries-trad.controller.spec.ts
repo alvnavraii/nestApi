@@ -15,12 +15,6 @@ import { User } from '../user/user.entity';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { TransformInterceptor } from '../common/interceptors/transform.interceptor';
 
-interface ApiResponse {
-  id: number;
-  name: string;
-  [key: string]: any;
-}
-
 describe('CountriesTradController (e2e)', () => {
   let app: INestApplication;
   let mockRepository: { query: jest.Mock };

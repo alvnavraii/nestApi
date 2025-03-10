@@ -1,27 +1,27 @@
-# 🌐 Traducciones de Países
+# 🌐 Country Translations
 
-API para gestionar las traducciones de países en múltiples idiomas.
+API for managing country translations in multiple languages.
 
 ## 📝 Endpoints
 
-### Obtener Todas las Traducciones
+### Get All Translations
 
 ```http
 GET /countries-trad
 ```
 
-**Roles permitidos:** ADMIN, USER
+**Allowed Roles:** ADMIN, USER
 
-**Respuesta exitosa:**
+**Successful Response:**
 ```json
 [
   {
     "id": 5,
-    "name": "España",
+    "name": "Spain",
     "language": {
       "id": 1,
-      "isoCode": "es_ES",
-      "name": "Español",
+      "isoCode": "en_US",
+      "name": "English",
       "isActive": true,
       "isDefault": true
     },
@@ -40,24 +40,24 @@ GET /countries-trad
 ]
 ```
 
-### Obtener Traducciones Inactivas
+### Get Inactive Translations
 
 ```http
 GET /countries-trad/inactive
 ```
 
-**Roles permitidos:** ADMIN
+**Allowed Roles:** ADMIN
 
-**Respuesta exitosa:**
+**Successful Response:**
 ```json
 [
   {
     "id": 10,
-    "name": "Irlanda",
+    "name": "Ireland",
     "language": {
       "id": 1,
-      "isoCode": "es_ES",
-      "name": "Español",
+      "isoCode": "en_US",
+      "name": "English",
       "isActive": true,
       "isDefault": true
     },
@@ -76,26 +76,26 @@ GET /countries-trad/inactive
 ]
 ```
 
-### Obtener una Traducción
+### Get a Translation
 
 ```http
 GET /countries-trad/:id
 ```
 
-**Roles permitidos:** ADMIN, USER
+**Allowed Roles:** ADMIN, USER
 
-**Parámetros:**
-- `id`: ID de la traducción (número)
+**Parameters:**
+- `id`: Translation ID (number)
 
-**Respuesta exitosa:**
+**Successful Response:**
 ```json
 {
   "id": 5,
-  "name": "España",
+  "name": "Spain",
   "language": {
     "id": 1,
-    "isoCode": "es_ES",
-    "name": "Español",
+    "isoCode": "en_US",
+    "name": "English",
     "isActive": true,
     "isDefault": true
   },
@@ -113,32 +113,32 @@ GET /countries-trad/:id
 }
 ```
 
-### Crear una Traducción
+### Create a Translation
 
 ```http
 POST /countries-trad
 ```
 
-**Roles permitidos:** ADMIN
+**Allowed Roles:** ADMIN
 
-**Cuerpo de la solicitud:**
+**Request Body:**
 ```json
 {
-  "name": "España",
+  "name": "Spain",
   "countryId": 1,
   "languageId": 1
 }
 ```
 
-**Respuesta exitosa:**
+**Successful Response:**
 ```json
 {
   "id": 5,
-  "name": "España",
+  "name": "Spain",
   "language": {
     "id": 1,
-    "isoCode": "es_ES",
-    "name": "Español"
+    "isoCode": "en_US",
+    "name": "English"
   },
   "country": {
     "id": 1,
@@ -152,33 +152,33 @@ POST /countries-trad
 }
 ```
 
-### Actualizar una Traducción
+### Update a Translation
 
 ```http
 PATCH /countries-trad/:id
 ```
 
-**Roles permitidos:** ADMIN
+**Allowed Roles:** ADMIN
 
-**Parámetros:**
-- `id`: ID de la traducción (número)
+**Parameters:**
+- `id`: Translation ID (number)
 
-**Cuerpo de la solicitud:**
+**Request Body:**
 ```json
 {
-  "name": "España actualizado"
+  "name": "Updated Spain"
 }
 ```
 
-**Respuesta exitosa:**
+**Successful Response:**
 ```json
 {
   "id": 5,
-  "name": "España actualizado",
+  "name": "Updated Spain",
   "language": {
     "id": 1,
-    "isoCode": "es_ES",
-    "name": "Español"
+    "isoCode": "en_US",
+    "name": "English"
   },
   "country": {
     "id": 1,
@@ -192,46 +192,43 @@ PATCH /countries-trad/:id
 }
 ```
 
-### Desactivar una Traducción
+### Deactivate a Translation
 
 ```http
 DELETE /countries-trad/:id
 ```
 
-**Roles permitidos:** ADMIN
+**Allowed Roles:** ADMIN
 
-**Parámetros:**
-- `id`: ID de la traducción (número)
+**Parameters:**
+- `id`: Translation ID (number)
 
-**Respuesta exitosa:**
+**Successful Response:**
 ```json
 {
-  "message": "Traducción eliminada correctamente",
-  "deleted": {
-    "id": 5,
-    "name": "España",
-    "language": {
-      "id": 1,
-      "isoCode": "es_ES",
-      "name": "Español"
-    },
-    "country": {
-      "id": 1,
-      "isoCode": "ES",
-      "isoCode3": "ESP"
-    },
-    "audit": {
-      "createdAt": "9/3/2025, 16:33:27",
-      "updatedAt": "9/3/2025, 17:00:00"
-    }
+  "id": 5,
+  "name": "Spain",
+  "language": {
+    "id": 1,
+    "isoCode": "en_US",
+    "name": "English"
+  },
+  "country": {
+    "id": 1,
+    "isoCode": "ES",
+    "isoCode3": "ESP"
+  },
+  "audit": {
+    "createdAt": "9/3/2025, 16:33:27",
+    "updatedAt": "9/3/2025, 17:15:00"
   }
 }
 ```
 
-## ⚠️ Códigos de Error
+## ⚠️ Error Responses
 
-- `400 Bad Request`: Datos de entrada inválidos
-- `401 Unauthorized`: Token de autenticación no proporcionado o inválido
-- `403 Forbidden`: El rol del usuario no tiene permisos para esta operación
-- `404 Not Found`: Traducción no encontrada
-- `500 Internal Server Error`: Error interno del servidor
+- `400 Bad Request`: Invalid request body or parameters
+- `401 Unauthorized`: Missing or invalid authentication
+- `403 Forbidden`: User doesn't have the required role
+- `404 Not Found`: Translation not found
+- `500 Internal Server Error`: Server error

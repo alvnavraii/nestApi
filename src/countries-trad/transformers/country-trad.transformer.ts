@@ -1,4 +1,7 @@
-import { CountryTradRaw, CountryTradResponse } from '../interfaces/country-trad.interface';
+import {
+  CountryTradRaw,
+  CountryTradResponse,
+} from '../interfaces/country-trad.interface';
 
 export function transformCountryTrad(raw: CountryTradRaw): CountryTradResponse {
   return {
