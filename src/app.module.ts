@@ -12,6 +12,7 @@ import { UserContextInterceptor } from './common/interceptors/user-context.inter
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { LanguageModule } from './language/language.module';
 import { CountriesModule } from './countries/countries.module';
+import { CountriesTradModule } from './countries-trad/countries-trad.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CountriesModule } from './countries/countries.module';
         connectString: `(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=${configService.get('BD_HOST')})(PORT=${configService.get('BD_PORT')}))(CONNECT_DATA=(SERVICE_NAME=${configService.get('BD_SERVICE_NAME')})))`,
         username: configService.get<string>('BD_USER'),
         password: configService.get<string>('BD_PASSWORD'),
+        schema: 'ecommerce',
         synchronize: false,
         logging: true,
         entities: ['dist/**/*.entity.js'],
@@ -33,6 +35,9 @@ import { CountriesModule } from './countries/countries.module';
           timezone: 'Europe/Madrid',
           formatOptions: {
             useNativeDate: true,
+          },
+          oracle: {
+            useAutoCommit: false,
           },
         },
       }),
@@ -48,6 +53,7 @@ import { CountriesModule } from './countries/countries.module';
     }),
     LanguageModule,
     CountriesModule,
+    CountriesTradModule,
   ],
   controllers: [AppController],
   providers: [

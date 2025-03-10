@@ -2,58 +2,131 @@
     id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     parent_id NUMBER,
     name VARCHAR2(100) NOT NULL,
-    description CLOB,
-    image_url VARCHAR2(255),
+    description VARCHAR2(1024),
+    image_url VARCHAR2(100),
+    category_code VARCHAR2(50) NOT NULL,
     is_active NUMBER(1) DEFAULT 1,
     display_order NUMBER,
     created_at TIMESTAMP DEFAULT SYSTIMESTAMP,
     updated_at TIMESTAMP DEFAULT SYSTIMESTAMP,
-    CONSTRAINT fk_parent_category FOREIGN KEY (parent_category_id) REFERENCES categories(category_id)
+    created_by NUMBER,
+    updated_by NUMBER,
+    CONSTRAINT fk_parent_category FOREIGN KEY (parent_id) REFERENCES categories(id)
 ); */
 
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
   ManyToOne,
   OneToMany,
   JoinColumn,
 } from 'typeorm';
-import { BaseEntity } from '../common/entities/base.entity';
+import { BaseEntity as CommonBaseEntity } from '../common/entities/base.entity';
 
 @Entity('CATEGORIES', { schema: 'ECOMMERCE' })
-export class CategoriesEntity extends BaseEntity<CategoriesEntity> {
-  @PrimaryGeneratedColumn({ name: 'ID' })
-  ID: number;
+export class CategoriesEntity extends CommonBaseEntity {
+  @PrimaryGeneratedColumn({
+    name: 'ID',
+  })
+  id: number;
 
-  @ManyToOne(() => CategoriesEntity, (category) => category.children)
-  @JoinColumn({ name: 'PARENT_ID' })
-  parent: CategoriesEntity;
+  @Column({
+    name: 'NAME',
+    type: 'varchar2',
+    length: 100,
+    nullable: false,
+  })
+  name: string;
+
+  @Column({
+    name: 'CATEGORY_CODE',
+    type: 'varchar2',
+    length: 50,
+    nullable: false,
+  })
+  categoryCode: string;
+
+  @Column({
+    name: 'DESCRIPTION',
+    type: 'varchar2',
+    length: 1024,
+    nullable: true,
+  })
+  description: string | null;
+
+  @Column({
+    name: 'IMAGE_URL',
+    type: 'varchar2',
+    length: 100,
+    nullable: true,
+  })
+  imageUrl: string | null;
+
+  @Column({
+    name: 'IS_ACTIVE',
+    type: 'number',
+    precision: 1,
+    default: 1,
+  })
+  isActive: number;
+
+  @Column({
+    name: 'DISPLAY_ORDER',
+    type: 'number',
+    nullable: true,
+  })
+  displayOrder: number | null;
+
+  @Column({
+    name: 'PARENT_ID',
+    type: 'number',
+    nullable: true,
+  })
+  parentId: number | null;
+
+  @ManyToOne(() => CategoriesEntity, (category) => category.children, {
+    nullable: true,
+  })
+  @JoinColumn({
+    name: 'PARENT_ID',
+  })
+  parent: CategoriesEntity | null;
 
   @OneToMany(() => CategoriesEntity, (category) => category.parent)
   children: CategoriesEntity[];
 
-  @Column({ name: 'PARENT_ID', nullable: true, type: 'number' })
-  PARENT_ID: number | null;
+  @CreateDateColumn({
+    name: 'CREATED_AT',
+    type: 'timestamp',
+  })
+  declare createdAt: Date;
 
-  @Column({ name: 'NAME', type: 'varchar2' })
-  NAME: string;
+  @UpdateDateColumn({
+    name: 'UPDATED_AT',
+    type: 'timestamp',
+  })
+  declare updatedAt: Date;
 
-  @Column({ name: 'DESCRIPTION', nullable: true, type: 'varchar2' })
-  DESCRIPTION: string | null;
+  @Column({
+    name: 'CREATED_BY',
+    type: 'number',
+    nullable: true,
+  })
+  createdBy: number | null;
 
-  @Column({ name: 'IMAGE_URL', nullable: true, type: 'varchar2' })
-  IMAGE_URL: string | null;
-
-  @Column({ name: 'IS_ACTIVE', type: 'number' })
-  IS_ACTIVE: number;
-
-  @Column({ name: 'DISPLAY_ORDER', nullable: true, type: 'number' })
-  DISPLAY_ORDER: number | null;
+  @Column({
+    name: 'UPDATED_BY',
+    type: 'number',
+    nullable: true,
+  })
+  updatedBy: number | null;
 }
 
 export type CreateCategoryDto = Omit<
   CategoriesEntity,
-  'category_id' | 'created_at' | 'updated_at'
+  'id' | 'createdAt' | 'updatedAt'
 >;
 export type UpdateCategoryDto = Partial<CreateCategoryDto>;

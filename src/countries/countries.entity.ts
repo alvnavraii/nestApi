@@ -10,23 +10,51 @@ UPDATED_AT          TIMESTAMP(6)
 CREATED_BY          NUMBER       
 UPDATED_BY          NUMBER    */
 
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { BaseEntity } from '../common/entities/base.entity';
+import { CountriesTradEntity } from '../countries-trad/countries-trad.entity';
 
 @Entity('COUNTRIES', { schema: 'ECOMMERCE' })
-export class Country extends BaseEntity<Country> {
-  @PrimaryGeneratedColumn({ name: 'ID' })
+export class Country extends BaseEntity {
+  @PrimaryGeneratedColumn({
+    name: 'ID',
+  })
   id: number;
 
-  @Column({ name: 'ISO_CODE' })
+  @Column({
+    name: 'ISO_CODE',
+    type: 'varchar2',
+    length: 2,
+    nullable: false,
+  })
   isoCode: string;
 
-  @Column({ name: 'ISO_CODE3' })
+  @Column({
+    name: 'ISO_CODE3',
+    type: 'varchar2',
+    length: 3,
+    nullable: false,
+  })
   isoCode3: string;
 
-  @Column({ name: 'IS_ACTIVE' })
+  @Column({
+    name: 'IS_ACTIVE',
+    type: 'number',
+    precision: 1,
+    nullable: false,
+    default: 1,
+  })
   isActive: number;
 
-  @Column({ name: 'IS_DEFAULT' })
+  @Column({
+    name: 'IS_DEFAULT',
+    type: 'number',
+    precision: 1,
+    nullable: false,
+    default: 0,
+  })
   isDefault: number;
+
+  @OneToMany(() => CountriesTradEntity, (translation) => translation.country)
+  translations: CountriesTradEntity[];
 }

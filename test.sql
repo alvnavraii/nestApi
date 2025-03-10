@@ -51,4 +51,8 @@ WHERE table_name = 'CATEGORIES';
 
 desc categories;
 
-desc TEMP_TABLE;
+select table_name from user_tables where table_name like '%TRAN%';
+
+desc country_translations;
+
+desc countries;

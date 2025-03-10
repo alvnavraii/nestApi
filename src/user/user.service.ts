@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
+import { UserResponse } from './interfaces/user-response.interface';
 
 @Injectable()
 export class UserService {
@@ -30,9 +29,9 @@ export class UserService {
     'user.phone',
     'user.companyName',
     'user.website',
+    'user.lastLoginDate',
     'user.createdAt',
     'user.updatedAt',
-    'user.lastLoginDate',
     'user.roleId',
     'role.id',
     'role.name',
@@ -40,28 +39,16 @@ export class UserService {
     'role.isActive',
     'role.createdAt',
     'role.updatedAt',
-    'createdBy.id',
-    'createdBy.firstName',
-    'createdBy.lastName',
-    'updatedBy.id',
-    'updatedBy.firstName',
-    'updatedBy.lastName',
   ];
-
-  private transformUserData(user: User): User {
-    return user; // Ya no necesitamos transformar las fechas
-  }
 
   private createBaseQuery() {
     return this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.role', 'role')
-      .leftJoinAndSelect('role.createdBy', 'createdBy')
-      .leftJoinAndSelect('role.updatedBy', 'updatedBy')
       .select(this.userSelectFields);
   }
 
-  private formatUserResponse(user: any) {
+  private formatUserResponse(user: User): UserResponse {
     return {
       id: user.id,
       email: user.email,
@@ -76,37 +63,21 @@ export class UserService {
         ? {
             id: user.role.id,
             name: user.role.name,
-            description: user.role.description,
+            description: user.role.description || null,
             isActive: user.role.isActive,
           }
         : null,
-      audit: {
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
-        createdBy: user.role?.createdBy
-          ? {
-              id: user.role.createdBy.id,
-              firstName: user.role.createdBy.firstName,
-              lastName: user.role.createdBy.lastName,
-            }
-          : null,
-        updatedBy: user.role?.updatedBy
-          ? {
-              id: user.role.updatedBy.id,
-              firstName: user.role.updatedBy.firstName,
-              lastName: user.role.updatedBy.lastName,
-            }
-          : null,
-      },
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     };
   }
 
-  async findAll(): Promise<any[]> {
+  async findAll(): Promise<UserResponse[]> {
     const users = await this.createBaseQuery().getMany();
     return users.map((user) => this.formatUserResponse(user));
   }
 
-  async findOne(id: number): Promise<any> {
+  async findOne(id: number): Promise<UserResponse> {
     const user = await this.createBaseQuery()
       .where('user.id = :id', { id })
       .getOne();
@@ -118,7 +89,7 @@ export class UserService {
     return this.formatUserResponse(user);
   }
 
-  async findByEmail(email: string) {
+  async findByEmail(email: string): Promise<User | null> {
     return await this.userRepository.findOne({
       where: { email },
       relations: ['role'],
@@ -134,18 +105,22 @@ export class UserService {
     companyName?: string;
     website?: string;
     roleId?: number;
-  }) {
+  }): Promise<UserResponse> {
     const passwordHash = await bcrypt.hash(createUserData.password, 10);
     const user = this.userRepository.create({
       ...createUserData,
       passwordHash,
       roleId: createUserData.roleId || 2,
-      isActive: true,
+      isActive: 1,
     });
-    return await this.userRepository.save(user);
+    const savedUser = await this.userRepository.save(user);
+    return this.findOne(savedUser.id);
   }
 
-  async update(id: number, updateUserData: Partial<User>) {
+  async update(
+    id: number,
+    updateUserData: Partial<User>,
+  ): Promise<UserResponse> {
     const userEntity = await this.userRepository
       .createQueryBuilder('user')
       .where('user.id = :id', { id })
@@ -155,27 +130,25 @@ export class UserService {
       throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
     }
 
-    // Establecemos el CLIENT_IDENTIFIER antes de hacer el update
     await this.userRepository.query(
       `BEGIN DBMS_SESSION.SET_IDENTIFIER(:1); END;`,
       [id],
     );
 
     try {
-      // Hacemos el merge y el save con la entidad original, no con los datos transformados
+      if (typeof updateUserData.isActive === 'boolean') {
+        updateUserData.isActive = updateUserData.isActive ? 1 : 0;
+      }
       this.userRepository.merge(userEntity, updateUserData);
       await this.userRepository.save(userEntity);
 
-      // Limpiamos el CLIENT_IDENTIFIER
       await this.userRepository.query(
         `BEGIN DBMS_SESSION.CLEAR_IDENTIFIER; END;`,
       );
 
-      // Después de guardar, buscamos el usuario actualizado y lo transformamos
       const updatedUser = await this.findOne(id);
-      return this.transformUserData(updatedUser);
+      return updatedUser;
     } catch (error) {
-      // Aseguramos que se limpie el CLIENT_IDENTIFIER incluso si hay error
       await this.userRepository.query(
         `BEGIN DBMS_SESSION.CLEAR_IDENTIFIER; END;`,
       );
@@ -184,49 +157,44 @@ export class UserService {
   }
 
   async updateLastLogin(id: number): Promise<void> {
-    // Primero establecemos el CLIENT_IDENTIFIER
     await this.userRepository.query(
       `BEGIN DBMS_SESSION.SET_IDENTIFIER(:1); END;`,
       [id],
     );
 
-    // Luego hacemos el update
     await this.userRepository.query(
       `UPDATE ECOMMERCE.USERS 
-       SET last_login_date = CURRENT_TIMESTAMP,
-           updated_by = :1,
-           updated_at = CURRENT_TIMESTAMP
-       WHERE id = :2`,
+       SET LAST_LOGIN_DATE = CURRENT_TIMESTAMP,
+           UPDATED_BY = :1,
+           UPDATED_AT = CURRENT_TIMESTAMP
+       WHERE ID = :2`,
       [id, id],
     );
 
-    // Limpiamos el CLIENT_IDENTIFIER
     await this.userRepository.query(
       `BEGIN DBMS_SESSION.CLEAR_IDENTIFIER; END;`,
     );
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<void> {
     const user = await this.findOne(id);
 
-    // Establecemos el CLIENT_IDENTIFIER antes de hacer el update
+    if (!user) {
+      throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+    }
+
     await this.userRepository.query(
       `BEGIN DBMS_SESSION.SET_IDENTIFIER(:1); END;`,
       [id],
     );
 
     try {
-      user.isActive = false;
-      await this.userRepository.save(user);
+      await this.userRepository.softDelete(id);
 
-      // Limpiamos el CLIENT_IDENTIFIER
       await this.userRepository.query(
         `BEGIN DBMS_SESSION.CLEAR_IDENTIFIER; END;`,
       );
-
-      return user;
     } catch (error) {
-      // Aseguramos que se limpie el CLIENT_IDENTIFIER incluso si hay error
       await this.userRepository.query(
         `BEGIN DBMS_SESSION.CLEAR_IDENTIFIER; END;`,
       );

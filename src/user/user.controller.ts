@@ -18,6 +18,7 @@ import { CreateUserDto } from './create-user-dto';
 import { UpdateUserDto } from './update-user-dto';
 import { Role } from '../auth/roles.enum';
 import { TransformInterceptor } from '../common/interceptors/transform.interceptor';
+import { UserResponse } from './interfaces/user-response.interface';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -26,22 +27,20 @@ export class UserController {
   constructor(private readonly usersService: UserService) {}
   @Get()
   @Roles(Role.ADMIN)
-  findAll() {
+  findAll(): Promise<UserResponse[]> {
     return this.usersService.findAll();
   }
 
   @Get(':id')
   @Roles(Role.ADMIN)
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<UserResponse> {
     return this.usersService.findOne(id);
   }
 
   @Post()
   @Roles(Role.ADMIN)
-  async create(@Body() createUserDto: CreateUserDto) {
-    const user = await this.usersService.create(createUserDto);
-    // user.id ya contiene el ID del usuario recién creado
-    return this.usersService.findOne(user.id);
+  async create(@Body() createUserDto: CreateUserDto): Promise<UserResponse> {
+    return this.usersService.create(createUserDto);
   }
 
   @Patch(':id')
@@ -49,13 +48,13 @@ export class UserController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
-  ) {
+  ): Promise<UserResponse> {
     return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   @Roles(Role.ADMIN)
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.usersService.remove(id);
   }
 }

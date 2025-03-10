@@ -8,6 +8,7 @@ export class CreateLanguageDto {
   name: string;
 
   @IsOptional()
+  @IsBoolean()
   isDefault?: boolean;
 
   @IsOptional()
@@ -16,8 +17,19 @@ export class CreateLanguageDto {
 }
 
 export class UpdateLanguageDto {
+  @IsString()
+  @IsOptional()
   code?: string;
+
+  @IsString()
+  @IsOptional()
   name?: string;
+
+  @IsOptional()
+  @IsBoolean()
   isDefault?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
   isActive?: boolean;
 }

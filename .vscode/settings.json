@@ -2,7 +2,7 @@
     "problems.decorations.enabled": false,
     "problems.autoReveal": false,
     "files.associations": {
-        "*.sql": "oraclesql"
+        "*.sql": "oracle-sql"
     },
     "[sql]": {
         "editor.formatOnSave": false

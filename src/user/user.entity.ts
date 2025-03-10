@@ -5,55 +5,101 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Role } from './role.entity';
-import { IsEmail, IsString, IsOptional } from 'class-validator';
 import { BaseEntity } from '../common/entities/base.entity';
+import { Role } from './role.entity';
 
 @Entity('USERS', { schema: 'ECOMMERCE' })
-export class User extends BaseEntity<User> {
-  @PrimaryGeneratedColumn({ name: 'ID' })
+export class User extends BaseEntity {
+  @PrimaryGeneratedColumn({
+    name: 'ID',
+  })
   id: number;
 
-  @ManyToOne(() => Role, { eager: true })
-  @JoinColumn({ name: 'ROLE_ID' })
-  role: Role;
-
-  @Column({ name: 'ROLE_ID', select: false })
-  roleId: number;
-
-  @IsEmail()
-  @Column({ name: 'EMAIL', unique: true })
+  @Column({
+    name: 'EMAIL',
+    type: 'varchar2',
+    length: 100,
+    nullable: false,
+    unique: true,
+  })
   email: string;
 
-  @Column({ name: 'PASSWORD_HASH' })
+  @Column({
+    name: 'PASSWORD_HASH',
+    type: 'varchar2',
+    length: 255,
+    nullable: false,
+  })
   passwordHash: string;
 
-  @IsString()
-  @Column({ name: 'FIRST_NAME' })
+  @Column({
+    name: 'FIRST_NAME',
+    type: 'varchar2',
+    length: 50,
+    nullable: false,
+  })
   firstName: string;
 
-  @IsString()
-  @Column({ name: 'LAST_NAME' })
+  @Column({
+    name: 'LAST_NAME',
+    type: 'varchar2',
+    length: 50,
+    nullable: false,
+  })
   lastName: string;
 
-  @IsString()
-  @IsOptional()
-  @Column({ name: 'PHONE', nullable: true })
+  @Column({
+    name: 'IS_ACTIVE',
+    type: 'number',
+    precision: 1,
+    default: 1,
+    nullable: false,
+  })
+  isActive: number;
+
+  @Column({
+    name: 'PHONE',
+    type: 'varchar2',
+    length: 20,
+    nullable: true,
+  })
   phone?: string;
 
-  @IsString()
-  @IsOptional()
-  @Column({ name: 'COMPANY_NAME', nullable: true })
+  @Column({
+    name: 'COMPANY_NAME',
+    type: 'varchar2',
+    length: 100,
+    nullable: true,
+  })
   companyName?: string;
 
-  @IsString()
-  @IsOptional()
-  @Column({ name: 'WEBSITE', nullable: true })
+  @Column({
+    name: 'WEBSITE',
+    type: 'varchar2',
+    length: 255,
+    nullable: true,
+  })
   website?: string;
 
-  @Column({ name: 'IS_ACTIVE', default: true })
-  isActive: boolean;
-
-  @Column({ name: 'LAST_LOGIN_DATE', nullable: true })
+  @Column({
+    name: 'LAST_LOGIN_DATE',
+    type: 'timestamp',
+    nullable: true,
+  })
   lastLoginDate?: Date;
+
+  @Column({
+    name: 'ROLE_ID',
+    type: 'number',
+    nullable: false,
+  })
+  roleId: number;
+
+  @ManyToOne(() => Role, {
+    nullable: false,
+  })
+  @JoinColumn({
+    name: 'ROLE_ID',
+  })
+  role: Role;
 }

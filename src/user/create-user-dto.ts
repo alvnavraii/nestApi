@@ -1,19 +1,37 @@
-import { OmitType } from '@nestjs/mapped-types';
-import { IsString, MinLength } from 'class-validator';
-import { User } from './user.entity';
+import {
+  IsString,
+  IsEmail,
+  MinLength,
+  IsOptional,
+  IsNumber,
+} from 'class-validator';
 
-export class CreateUserDto extends OmitType(User, [
-  'id',
-  'role',
-  'passwordHash',
-  'isActive',
-  'lastLoginDate',
-  'createdAt',
-  'updatedAt',
-  'createdBy',
-  'updatedBy',
-] as const) {
+export class CreateUserDto {
+  @IsEmail()
+  email: string;
+
   @IsString()
   @MinLength(6)
   password: string;
+
+  @IsString()
+  firstName: string;
+
+  @IsString()
+  lastName: string;
+
+  @IsString()
+  @IsOptional()
+  phone?: string;
+
+  @IsString()
+  @IsOptional()
+  companyName?: string;
+
+  @IsString()
+  @IsOptional()
+  website?: string;
+
+  @IsNumber()
+  roleId: number;
 }

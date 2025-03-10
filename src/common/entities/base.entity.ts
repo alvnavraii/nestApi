@@ -1,13 +1,6 @@
-import {
-  CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
-  AfterLoad,
-} from 'typeorm';
-import { User } from '../../user/user.entity';
+import { CreateDateColumn, UpdateDateColumn, Column, AfterLoad } from 'typeorm';
 
-export abstract class BaseEntity<UserType = User> {
+export abstract class BaseEntity {
   @CreateDateColumn({
     name: 'CREATED_AT',
     type: 'timestamp',
@@ -20,13 +13,19 @@ export abstract class BaseEntity<UserType = User> {
   })
   updatedAt: Date;
 
-  @ManyToOne(() => User, { nullable: true })
-  @JoinColumn({ name: 'CREATED_BY' })
-  createdBy: UserType;
+  @Column({
+    name: 'CREATED_BY',
+    type: 'number',
+    nullable: true,
+  })
+  createdById: number;
 
-  @ManyToOne(() => User, { nullable: true })
-  @JoinColumn({ name: 'UPDATED_BY' })
-  updatedBy: UserType;
+  @Column({
+    name: 'UPDATED_BY',
+    type: 'number',
+    nullable: true,
+  })
+  updatedById: number;
 
   @AfterLoad()
   adjustTimezone() {

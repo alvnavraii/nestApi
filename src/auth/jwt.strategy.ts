@@ -1,11 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from '../user/user.service';
+import { UserResponse } from '../user/interfaces/user-response.interface';
+
+interface JwtPayload {
+  id: number;
+  email: string;
+  role: string;
+}
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -25,9 +29,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: any) {
-    // En lugar de devolver solo el payload, cargar el usuario completo
-    const user = await this.userService.findOne(payload.id);
-    return user;
+  async validate(payload: JwtPayload): Promise<UserResponse> {
+    return await this.userService.findOne(payload.id);
   }
 }

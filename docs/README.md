@@ -26,6 +26,7 @@ Modern RESTful API for e-commerce management, built with NestJS and Oracle Datab
 - [Categories](api/categories.md)
 - [Languages](api/languages.md)
 - [Countries](api/countries.md)
+- [Traducciones de Países](api/countries-translations.md)
 
 ### Technical Documentation
 - [Database Structure](technical/database.md)
